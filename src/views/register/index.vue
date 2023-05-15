@@ -2,59 +2,133 @@
   <div>
     <div class="container"></div>
     <div class="login-block">
-      <div class="login-animate">
-        <div class="left-ear"></div>
-        <div class="right-ear"></div>
-        <div class="head">
-          <div class="left-eye"></div>
-          <div class="right-eye"></div>
-          <div class="face">
-            <div class="nose"></div>
-            <div class="mouth"></div>
-          </div>
-        </div>
-        <div class="body"></div>
-        <div class="left-arm"></div>
-        <div class="right-arm"></div>
-      </div>
       <el-form
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        class="demo-ruleForm el-input"
+        ref="registerForm"
+        :model="registerForm"
+        :rules="registerRules"
+        class="register-form"
+        auto-complete="on"
+        label-position="left"
       >
-        <el-form-item prop="username">
+        <div class="title-container">
+          <h3 class="title">注册</h3>
+        </div>
+
+        <el-form-item prop="name">
           <el-input
-            v-model="ruleForm.username"
-            placeholder="请输入用户名"
-            name="username"
-          ></el-input>
+            ref="name"
+            v-model="registerForm.name"
+            placeholder="姓名"
+            name="name"
+            type="text"
+            tabindex="1"
+            auto-complete="on"
+          />
         </el-form-item>
-        <el-form-item prop="pass">
+
+        <el-form-item prop="account">
           <el-input
-            type="password"
-            v-model="ruleForm.pass"
-            placeholder="请输入密码"
+            ref="account"
+            v-model="registerForm.account"
+            placeholder="学号"
+            name="account"
+            type="text"
+            tabindex="2"
+            auto-complete="on"
+          />
+        </el-form-item>
+
+        <el-form-item prop="sex">
+          <el-select
+            v-model="registerForm.sex"
+            placeholder="性别"
+            :style="{ width: '100%' }"
+          >
+            <el-option key="hypk01" label="男" value="hypk01"> </el-option>
+            <el-option key="hypk02" label="女" value="hypk02"> </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item prop="age">
+          <el-input
+            ref="age"
+            v-model="registerForm.age"
+            placeholder="年龄"
+            name="age"
+            type="number"
+            tabindex="3"
+            auto-complete="on"
+          />
+        </el-form-item>
+
+        <el-form-item prop="telephone">
+          <el-input
+            ref="telephone"
+            v-model="registerForm.telephone"
+            placeholder="联系方式"
+            name="telephone"
+            type="text"
+            tabindex="4"
+            auto-complete="on"
+          />
+        </el-form-item>
+
+        <el-form-item prop="major">
+          <el-input
+            ref="major"
+            v-model="registerForm.major"
+            placeholder="专业"
+            name="major"
+            type="text"
+            tabindex="5"
+            auto-complete="on"
+          />
+        </el-form-item>
+
+        <el-form-item prop="password">
+          <el-input
+            :key="passwordType"
+            ref="password"
+            v-model="registerForm.password"
+            placeholder="密码"
             name="password"
-            @keyup.enter.native="submitForm('ruleForm')"
-          ></el-input>
+            tabindex="6"
+            auto-complete="on"
+            @keyup.enter.native="handleregister"
+          />
         </el-form-item>
-        <div
-          class="sub"
-          v-loading="loading"
-          element-loading-spinner="el-icon-loading"
-          @click="submitForm('ruleForm')"
+        <el-form-item prop="repetition">
+          <el-input
+            :key="passwordType"
+            ref="repetition"
+            v-model="registerForm.repetition"
+            placeholder="确认密码"
+            name="repetition"
+            tabindex="7"
+            auto-complete="on"
+            @keyup.enter.native="handleregister"
+          />
+        </el-form-item>
+
+        <el-button
+          type="primary"
+          style="width: 100%; margin-left: 0px; margin-bottom: 25px"
+          @click.native.prevent="goBack"
+          >返回</el-button
         >
-          提交
-        </div>
-        <div
-          class="sub"
-          v-loading="loading"
-          element-loading-spinner="el-icon-loading"
-          @click="handleRegister"
+
+        <el-button
+          type="primary"
+          style="width: 100%; margin-left: 0px"
+          @click.native.prevent="handleregister"
+          :loading="loading"
+          >注册</el-button
         >
-          去注册
-        </div>
+
+        <!-- <div class="tips">
+        <span style="margin-right:20px;">username: admin</span>
+        <span> password: any</span>
+      </div> -->
       </el-form>
     </div>
   </div>
@@ -66,28 +140,73 @@ export default {
   name: "login",
   data() {
     return {
-      ruleForm: {
-        username: "",
-        pass: ""
+      registerForm: {
+        name: "",
+        password: "",
+        repetition: "",
+        account: "",
+        sex: "",
+        age: null,
+        telephone: "",
+        major: ""
       },
-      rules: {
-        username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+      registerRules: {
+        name: [{ required: true, trigger: "blur", message: "姓名不能为空" }],
+        password: [{ required: true, trigger: "blur" }],
+        repetition: [
+          {
+            required: true,
+            trigger: "blur"
+          }
         ],
-        pass: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 18, message: "长度在 6 到 18 个字符", trigger: "blur" }
+        account: [
+          {
+            required: true,
+            trigger: "blur",
+            message: "学号不能为空"
+          }
         ]
       },
       loading: false,
+      passwordType: "password",
+      redirect: undefined,
       message: ""
     };
   },
+  watch: {
+    $route: {
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect;
+      },
+      immediate: true
+    }
+  },
   methods: {
-    // 去注册
-    handleRegister() {
-      this.$router.push({ path: "/register" });
+    handleregister() {
+      this.$refs.registerForm.validate(valid => {
+        if (valid) {
+          this.loading = true;
+          register(this.registerForm)
+            .then(res => {
+              console.log(res);
+              this.$message({
+                message: "注册成功",
+                type: "success",
+                duration: 1000
+              });
+              this.$router.push({ path: "/login" });
+            })
+            .finally(() => {
+              this.loading = false;
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    goBack() {
+      this.$router.push({ path: "/login" });
     },
     // 头像demo
     onload: function() {
@@ -265,7 +384,7 @@ body {
 }
 .login-block {
   position: absolute;
-  top: 50%;
+  top: 30%;
   left: 50%;
   margin-left: -150px;
   margin-top: -200px;
@@ -273,7 +392,7 @@ body {
   flex-direction: column;
   align-items: center;
   width: 300px;
-  height: 400px;
+  padding: 20px;
   background: #3dceba;
   border-radius: 10px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
@@ -520,7 +639,6 @@ input::-webkit-input-placeholder {
   line-height: 35px;
   color: #3dceba;
   cursor: pointer;
-  margin-bottom: 10px;
 }
 
 body {

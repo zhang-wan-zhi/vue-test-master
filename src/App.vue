@@ -1,23 +1,27 @@
 <template>
-
   <div id="app">
-     <!--头部导航-->
-     <banner></banner>
-     <router-view></router-view>
+    <!--头部导航-->
+    <banner
+      v-if="this.$route.path !== '/login' && this.$route.path !== '/register'"
+    ></banner>
+    <router-view></router-view>
   </div>
 </template>
 <script>
-import banner from './components/banner'
+import banner from "./components/banner";
 export default {
-  name: 'App',
-  components:{
+  name: "App",
+  components: {
     banner
+  },
+  mounted() {
+    console.log("this.$route.path", this.$router);
   }
-}
+};
 </script>
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
