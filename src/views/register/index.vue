@@ -10,10 +10,6 @@
         auto-complete="on"
         label-position="left"
       >
-        <div class="title-container">
-          <h3 class="title">注册</h3>
-        </div>
-
         <el-form-item prop="name">
           <el-input
             ref="name"
@@ -34,19 +30,16 @@
             name="account"
             type="text"
             tabindex="2"
-            auto-complete="on"
           />
         </el-form-item>
 
         <el-form-item prop="sex">
-          <el-select
-            v-model="registerForm.sex"
-            placeholder="性别"
-            :style="{ width: '100%' }"
+          <el-radio v-model="registerForm.sex" label="hypk01" border
+            >男</el-radio
           >
-            <el-option key="hypk01" label="男" value="hypk01"> </el-option>
-            <el-option key="hypk02" label="女" value="hypk02"> </el-option>
-          </el-select>
+          <el-radio v-model="registerForm.sex" label="hypk02" border
+            >女</el-radio
+          >
         </el-form-item>
 
         <el-form-item prop="age">
@@ -136,6 +129,7 @@
 <script>
 import $ from "jquery";
 import jparticle from "../../js/jparticle.js";
+import { register } from "@/api/user.js";
 export default {
   name: "login",
   data() {
@@ -298,32 +292,25 @@ export default {
       });
     },
     // 用户提交
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+    handleregister() {
+      this.$refs.registerForm.validate(valid => {
         if (valid) {
-          let that = this;
-          const data = {
-            account: this.ruleForm.username,
-            password: this.ruleForm.pass
-          };
           this.loading = true;
-          this.$store.dispatch("login", data);
-          //   console.log("1111111", this.$store.dispatch("login", data));
-          // that.$axios.post('/api/auth/login',data)
-          // .then((res) => {
-          //     if(res.code == 200){
-          //        this.loading =false
-          //        this.open2();
-          //         console.log(res.data.access_token)
-          //        this.$store.commit("LOGIN", res.data.access_token);
-          //        this.$router.push('/')
-          //     }else{
-          //        this.loading =false
-          //        this.message = res.message;
-          //        this.open3();
-          //     }
-          // })
+          register(this.registerForm)
+            .then(res => {
+              console.log(res);
+              this.$message({
+                message: "注册成功",
+                type: "success",
+                duration: 1000
+              });
+              this.$router.push({ path: "/login" });
+            })
+            .finally(() => {
+              this.loading = false;
+            });
         } else {
+          console.log("error submit!!");
           return false;
         }
       });

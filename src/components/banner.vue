@@ -5,8 +5,8 @@
         ><img src="../../src/img/logo.png" alt=""
       /></router-link>
       <div class="logo_txt">
-        <p class="tit">叁猿网络科技</p>
-        <p class="txt">THREE APES NETWORK TECHNOLOGY</p>
+        <p class="tit">生涯规划发展平台</p>
+        <p class="txt">Career planning and development platform</p>
       </div>
       <ul class="list">
         <el-menu
@@ -19,7 +19,7 @@
           active-text-color="#fff"
         >
           <el-menu-item index="1"
-            ><router-link to="/" active-class="active" exact
+            ><router-link to="/contact" active-class="active" exact
               >生涯指导</router-link
             ></el-menu-item
           >
@@ -27,13 +27,13 @@
             ><router-link to="/case">企业招聘</router-link></el-menu-item
           >
           <el-menu-item index="3"
-            ><router-link to="/newslist1">生活指导</router-link></el-menu-item
+            ><router-link to="/article">生活指导</router-link></el-menu-item
           >
           <el-menu-item index="4"
             ><router-link to="/about">心理指导</router-link></el-menu-item
           >
           <el-menu-item index="5"
-            ><router-link to="/contact">在线课程</router-link></el-menu-item
+            ><router-link to="/live">在线课程</router-link></el-menu-item
           >
         </el-menu>
       </ul>

@@ -1,146 +1,229 @@
 <template>
-    <div>
-        <!--banner -->
-        <div class="case_bg"></div>
-        <div class="con case_tabs">
-            <ul class="list wow animated fadeInDown">
-                <li  v-for="item in caselist" >
-                    <router-link :to="item.url" active-class="active" exact>
-                        <div class="box">
-                            <p>{{item.name}}</p>
-                        </div>
-                    </router-link>
-                </li>
-            </ul>
-            <div class="router_box">
-                <router-view ></router-view>
+  <div>
+    <!--banner -->
+    <div class="case_bg"></div>
+    <div class="con case_tabs">
+      <ul class="list wow animated fadeInDown" v-show="!isShow">
+        <div class="job-list">
+          <div class="job-item" v-for="item in jobList" :key="item.id">
+            <div class="job-item-left">
+              <div class="job-item-left-name" @click="handleMajorName(item)">
+                {{ item.name }}
+              </div>
+              <div class="job-item-left-job">薪资：{{ item.salary }}</div>
+              <div>经验：{{ item.experience }}</div>
+              <div>学位：{{ item.degree }}</div>
+              <div>专业：{{ item.major }}</div>
             </div>
+            <div class="job-item-right">
+              <div class="job-item-right-name"></div>
+              <div>公司名称：{{ item.companyName }}</div>
+              <div>联系方式：{{ item.telephone }}</div>
+              <div>地址：{{ item.address }}</div>
+            </div>
+          </div>
         </div>
-        <foot></foot>
+        <div class="major-list">
+          <div class="major-list-title">专业分类</div>
+          <div
+            class="major-list-item"
+            v-for="item in majorList"
+            :key="item"
+            @click="handleMajor(item)"
+            :style="{ color: selectMajor === item ? '#247dff' : '' }"
+          >
+            <div>{{ item }}</div>
+            <div>></div>
+          </div>
+        </div>
+      </ul>
+      <div class="details wow animated fadeInDown" v-if="isShow">
+        <div class="details-btn">
+          <el-button type="primary" round @click="goBack">返回</el-button>
+        </div>
+        <div class="company-info">
+          <div>公司名称：{{ companyDetail.companyInfo.name || "" }}</div>
+          <div>公司地址：{{ companyDetail.companyInfo.address || "" }}</div>
+          <div>联系方式：{{ companyDetail.companyInfo.telephone || "" }}</div>
+        </div>
+        <div class="company-title">公司简介</div>
+        <div class="company-title-line"></div>
+        <div class="company-introduction">
+          {{ companyDetail.companyInfo.introduction }}
+        </div>
+        <div class="company-title">岗位要求</div>
+        <div class="company-title-line"></div>
+        <div class="company-introduction">
+          {{ companyDetail.requirement }}
+        </div>
+      </div>
     </div>
+    <foot></foot>
+  </div>
 </template>
 <script>
-import {WOW} from 'wowjs'
-import foot from '../../components/foot'
+import foot from "../../components/foot";
 export default {
-    data(){
-        return{
-            shows:1,
-            caselist:[
-                {
-                    name:"网站开发",
-                    url:"/case/case1",
-                },
-                {
-                    name:"微信公众号",
-                    url:"/case/case2",
-                },
-                {
-                    name:"微信小程序",
-                    url:"/case/case3",
-                },
-                {
-                    name:"移动APP",
-                    url:"/case/case4",
-                },
-                {
-                    name:"优化项目",
-                    url:"/case/case5",
-                },
-                {
-                    name:"网络推广",
-                    url:"/case/case6",
-                },
-            ]
-        }
+  data() {
+    return {
+      shows: 1,
+      jobList: [],
+      majorList: [
+        "全部",
+        "计算机科学与技术",
+        "软件工程",
+        "工商管理",
+        "会计学",
+        "英语",
+        "机械设计制造及其自动化",
+        "自动化",
+        "通信工程",
+        "电子信息工程",
+        "财务管理"
+      ],
+      selectMajor: "全部",
+      isShow: false,
+      companyDetail: {}
+    };
+  },
+  components: {
+    foot
+  },
+  methods: {
+    // 获取岗位列表
+    async getJobList() {
+      const res = await this.$axios.post("/api/job/list", {
+        major: this.selectMajor === "全部" ? "" : this.selectMajor
+      });
+      if (res.code === "200") {
+        this.jobList = res.data.records;
+        console.log(this.jobList);
+      }
     },
-    components:{
-        foot
-    },
-    methods:{
+    handleMajor(item) {
+      this.selectMajor = item;
 
+      this.getJobList();
     },
-    mounted(){
-         new WOW().init()
+    // 点击查看岗位详情
+    async handleMajorName(item) {
+      console.log(item);
+      const res = await this.$axios.post("/api/job/info", { id: item.id });
+      if (res.code === "200") {
+        this.companyDetail = res.data;
+        this.isShow = true;
+      }
+    },
+    // 放回列表
+    goBack() {
+      this.isShow = false;
     }
-}
+  },
+  mounted() {
+    this.getJobList();
+  }
+};
 </script>
 <style lang="less" scoped>
-.icon{
-    font-size: 36px;
+.icon {
+  font-size: 36px;
 }
-a{
-    color:#333;
+a {
+  color: #333;
 }
-.case_bg{
-    height: 238px;
-    margin: 0px auto;
-    background-image: url(../../img/bg9.png);
-    background-repeat: no-repeat;
-    background-position: center;
+.case_bg {
+  height: 238px;
+  margin: 0px auto;
+  background-image: url(../../img/bg9.png);
+  background-repeat: no-repeat;
+  background-position: center;
 }
-.router_box{
-    min-height:1200px;
+.router_box {
+  min-height: 1200px;
 }
-.height{
-    max-height:500px;
-}
-.case_tabs{
-    .list{
-        height:200px;
+.case_tabs {
+  .list {
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px 15px 50px rgba(66, 159, 255, 0.1);
+    padding: 20px 100px;
+    padding-bottom: 40px;
+    .job-list {
+      width: 60%;
+      .job-item {
+        width: 100%;
         display: flex;
-        box-shadow: 0px 15px 50px rgba(66,159,255,.1);
-        padding: 20px;
-        padding-bottom: 40px;
-        li{
-            width:20%;
-            background-repeat: no-repeat;
-            background-position:center;
-            background-position-y: 50px;
-            border-radius:30px;
-            cursor: pointer;
-            a{
-                display: block;
-                border-radius: 15px;
-                &.active{
-                    box-shadow: 0px 15px 15px rgba(66,159,255,.2);
-                }
-                &:hover{
-                    box-shadow: 0px 15px 15px rgba(66,159,255,.2);
-                }
-            }
-            background-size: 92px 70px;
-            &:nth-child(1){background-image: url(../../img/ty1_1.png);}
-            &:nth-child(2){background-image: url(../../img/ty1_2.png);}
-            &:nth-child(3){background-image: url(../../img/ty1_3.png);}
-            &:nth-child(4){background-image: url(../../img/ty1_4.png);}
-            &:nth-child(5){background-image: url(../../img/ty1_5.png);}
-            &:nth-child(6){background-image: url(../../img/ty1_6.png);}
-            .box{
-                display: flex;
-                width:180px;
-                height:180px;
-                margin:15px auto 0px;
-                border-radius:20px;
-                p{
-                    width:100%;
-                    font-size: 20px;
-                    margin-top: 125px;
-                    text-align: center;
-                    position: relative;
-                    &:after{
-                        content:'';
-                        position: absolute;
-                        top: 45px;
-                        left:50%;
-                        margin-left: -10px;
-                        width:20px;
-                        height:2px;
-                        background-color: #0099FF;
-                    }
-                }
-            }
+        justify-content: space-between;
+        text-align: left;
+        font-size: 20px;
+        // color: #ccc;
+        div {
+          margin-bottom: 20px;
         }
+        .job-item-left {
+          width: 50%;
+        }
+        .job-item-right {
+          width: 50%;
+        }
+        .job-item-left-name {
+          color: #247dff;
+          font-size: 30px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        .job-item-right-name {
+          height: 45px;
+        }
+        .job-item-left-job {
+          color: #f10a0a;
+        }
+      }
     }
+    .major-list {
+      width: 30%;
+      .major-list-title {
+        font-weight: 600;
+        font-size: 18px;
+        margin-bottom: 30px;
+      }
+      .major-list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .details {
+    text-align: left;
+    box-shadow: 0px 15px 50px rgba(66, 159, 255, 0.1);
+    padding: 20px 100px;
+    padding-bottom: 40px;
+    .company-info {
+      font-size: 20px;
+      margin-bottom: 50px;
+      margin-top: 20px;
+    }
+    .details-btn {
+      text-align: right;
+    }
+  }
+  .company-title {
+    font-size: 25px;
+    font-weight: 600;
+  }
+  .company-title-line {
+    width: 70px;
+    height: 5px;
+    background-color: #247dff;
+    border-radius: 10px;
+    margin-bottom: 30px;
+  }
+  .company-introduction {
+    font-size: 20px;
+    margin-bottom: 50px;
+  }
 }
 </style>

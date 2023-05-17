@@ -17,6 +17,7 @@ import case4 from "@/views/anli/caseChild/case4";
 import case5 from "@/views/anli/caseChild/case5";
 import case6 from "@/views/anli/caseChild/case6";
 import register from "@/views/register/index";
+import live from "@/views/live/index";
 
 Vue.use(Router);
 
@@ -59,6 +60,11 @@ export default new Router({
       component: contact
     },
     {
+      path: "/live",
+      name: "live",
+      component: live
+    },
+    {
       path: "/case",
       name: "case",
       component: anli,
@@ -95,36 +101,9 @@ export default new Router({
       ]
     },
     {
-      path: "/newslist1",
+      path: "/article",
       name: newslist,
-      component: newslist,
-      children: [
-        {
-          path: "",
-          name: newslist1,
-          component: newslist1
-        },
-        {
-          path: "/newslist2",
-          name: newslist1,
-          component: newslist1
-        },
-        {
-          path: "/newslist3",
-          name: newslist1,
-          component: newslist1
-        },
-        {
-          path: "/newslist4",
-          name: newslist1,
-          component: newslist1
-        },
-        {
-          path: "/newslist1/newinfos",
-          name: newinfos,
-          component: newinfos
-        }
-      ]
+      component: newslist1
     }
   ]
 });

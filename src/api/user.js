@@ -9,3 +9,8 @@ export const getQuestion = data => {
 export const login = data => {
   return axios.post("/api/user/login", data);
 };
+
+// 注册
+export const register = data => {
+  return axios.post("/api/user/register", data);
+};

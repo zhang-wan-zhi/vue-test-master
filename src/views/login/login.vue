@@ -2,7 +2,7 @@
   <div>
     <div class="container"></div>
     <div class="login-block">
-      <div class="login-animate">
+      <!-- <div class="login-animate">
         <div class="left-ear"></div>
         <div class="right-ear"></div>
         <div class="head">
@@ -16,7 +16,8 @@
         <div class="body"></div>
         <div class="left-arm"></div>
         <div class="right-arm"></div>
-      </div>
+      </div> -->
+      <div class="login-title">生涯规划发展平台</div>
       <el-form
         :model="ruleForm"
         :rules="rules"
@@ -26,7 +27,7 @@
         <el-form-item prop="username">
           <el-input
             v-model="ruleForm.username"
-            placeholder="请输入用户名"
+            placeholder="请输入学号"
             name="username"
           ></el-input>
         </el-form-item>
@@ -71,14 +72,8 @@ export default {
         pass: ""
       },
       rules: {
-        username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
-        ],
-        pass: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 18, message: "长度在 6 到 18 个字符", trigger: "blur" }
-        ]
+        username: [{ required: true, message: "请输入学号", trigger: "blur" }],
+        pass: [{ required: true, message: "请输入密码", trigger: "blur" }]
       },
       loading: false,
       message: ""
@@ -188,22 +183,16 @@ export default {
             password: this.ruleForm.pass
           };
           this.loading = true;
-          this.$store.dispatch("login", data);
-          //   console.log("1111111", this.$store.dispatch("login", data));
-          // that.$axios.post('/api/auth/login',data)
-          // .then((res) => {
-          //     if(res.code == 200){
-          //        this.loading =false
-          //        this.open2();
-          //         console.log(res.data.access_token)
-          //        this.$store.commit("LOGIN", res.data.access_token);
-          //        this.$router.push('/')
-          //     }else{
-          //        this.loading =false
-          //        this.message = res.message;
-          //        this.open3();
-          //     }
-          // })
+          this.$store
+            .dispatch("login", data)
+            .then(() => {
+              console.log("登录成功");
+              this.$router.push({ path: "/contact" });
+              this.loading = false;
+            })
+            .catch(() => {
+              this.loading = false;
+            });
         } else {
           return false;
         }
@@ -287,6 +276,10 @@ body {
   margin: 20px 0;
   position: relative;
   overflow: hidden;
+}
+.login-title {
+  padding: 40px 0;
+  color: #fff;
 }
 .login-animate div,
 .password-animate div {

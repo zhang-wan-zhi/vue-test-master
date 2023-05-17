@@ -1,6 +1,6 @@
 <template>
   <div class="newslist">
-    <div class="newimg1"><img src="../../img/newimg1.png" /></div>
+    <div class="newimg2">这里有丰富的文章和有趣的游戏</div>
     <div class="btsty">
       <div class="content fx">
         <div class="left_box wow animated fadeInLeft">
@@ -26,8 +26,8 @@
   </div>
 </template>
 <script>
-const axios = require("axios");
 import foot from "../../components/foot";
+
 import { WOW } from "wowjs";
 export default {
   data: function() {
@@ -36,18 +36,22 @@ export default {
         { name: "游戏", link: "/newslist1" },
         { name: "生活文章", link: "/newslist2" }
       ],
-      indexSpan: "0"
+      indexSpan: 0
     };
   },
   methods: {
     changeSpan(index) {
-      this.$store.commit("setindex", index);
-      this.indexSpan = this.$store.state.indexspan;
+      this.indexSpan = index;
+    }
+  },
+  beforeCreate() {
+    if (this.$route.params.linkId) {
+      this.indexSpan = 1;
     }
   },
   mounted() {
-    this.indexSpan = this.$store.state.indexspan;
-    new WOW().init();
+    // this.indexSpan = this.$store.state.indexspan;
+    // new WOW().init();
   },
   components: { foot }
 };
@@ -56,13 +60,16 @@ export default {
 .newslist {
   background-color: #fff;
 }
-.newimg1 {
+.newimg2 {
   overflow: hidden;
-  img {
-    background-position: center;
-    display: block;
-    margin: 0 auto;
-  }
+  height: 180px;
+  line-height: 180px;
+  background: #397af6;
+  padding: 20px 200px;
+  color: #fff;
+  text-align: center;
+  font-weight: 800;
+  font-size: 30px;
 }
 .newslist .content {
   width: 1200px;

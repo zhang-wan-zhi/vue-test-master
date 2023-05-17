@@ -1,14 +1,15 @@
 import Vue from "vue";
 import vuex from "vuex";
-import { setID, getID, removeID } from "@/utils/auth";
+import { setID, getID, removeID, setAnswer } from "@/utils/auth";
 import { login } from "@/api/user";
 Vue.use(vuex);
 export default new vuex.Store({
   state: {
     token: window.sessionStorage.getItem("token"), //存到localStorage中一样m
     test: "111",
-    indexspan: localStorage.getItem("indexspan") || 0,
-    id: getID()
+    indexspan: 0,
+    id: getID(),
+    hasAnswer: false
   },
   mutations: {
     Company: (state, data) => {
@@ -17,6 +18,13 @@ export default new vuex.Store({
     setindex(state, value) {
       localStorage.setItem("indexspan", value);
       state.indexspan = value;
+    },
+    SET_ID: (state, id) => {
+      state.id = id;
+    },
+    SET_HASANSWER: (state, hasAnswer) => {
+      setAnswer(hasAnswer);
+      state.hasAnswer = hasAnswer;
     }
   },
   actions: {
