@@ -65,6 +65,7 @@
             <div class="company-introduction">
               {{ courseSummaryDetails.title }}
             </div>
+            <!-- 需要修改 -->
             <video
               :src="
                 `http://172.16.65.245:80/media/${courseSummaryDetails.mediaPath}`

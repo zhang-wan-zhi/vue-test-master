@@ -118,7 +118,8 @@ export default {
       //判断当前浏览器是否支持WebSocket
       if ("WebSocket" in window) {
         this.websocket = new WebSocket(
-          "ws://172.16.65.246:80/websocket/" + getID()
+          // 需要修改
+          "ws://172.16.65.245:80/websocket/" + getID()
         );
       } else {
         alert("当前浏览器 Not support websocket");

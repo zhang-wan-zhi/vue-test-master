@@ -34,6 +34,7 @@ Vue.prototype.$axios = axios;
 Vue.prototype.$message = Message;
 Vue.use(ElementUI);
 Vue.use(animated);
+// 全局变量
 
 /* eslint-disable no-new */
 new Vue({

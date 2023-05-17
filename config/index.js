@@ -11,6 +11,7 @@ module.exports = {
     assetsPublicPath: "/",
     proxyTable: {
       "/api": {
+        // 需要修改
         target: "http://172.16.65.245:80",
         changeOrigin: true,
         // 去掉api
@@ -21,7 +22,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: "172.16.71.23", // can be overwritten by process.env.HOST
+    host: "172.16.71.23", // 需要修改 'http://localhost/'
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
